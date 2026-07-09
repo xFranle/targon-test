@@ -1,5 +1,5 @@
 services:
-  targon:
+  validator:
     image: ghcr.io/manifold-inc/targon:latest
     restart: always
     stop_grace_period: 15m
@@ -9,13 +9,13 @@ services:
       mongo:
         condition: service_healthy
     build:
-      dockerfile: Dockerfile
-      context: ./targon
+      dockerfile: deploy/validator.Dockerfile
+      context: ..
       x-bake:
         platforms:
           - linux/amd64
           - linux/arm64
-    env_file: .env
+    env_file: ../.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -23,13 +23,13 @@ services:
     image: ghcr.io/manifold-inc/targon-weights-api:latest
     restart: always
     build:
-      dockerfile: Dockerfile
-      context: ./weights-api
+      dockerfile: deploy/weights-api.Dockerfile
+      context: ..
       x-bake:
         platforms:
           - linux/amd64
           - linux/arm64
-    env_file: .env
+    env_file: ../.env
 
   mongo:
     image: mongo:latest

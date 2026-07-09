@@ -4,7 +4,7 @@ services:
     ports:
       - 7777:7777
     build:
-      dockerfile: Dockerfile
-      context: ./miner
+      dockerfile: deploy/miner.Dockerfile
+      context: ..
     volumes:
-      - ./config.json:/app/config.json
+      - ../config.json:/app/config.json

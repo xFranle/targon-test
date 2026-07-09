@@ -9,15 +9,16 @@ COPY go.sum .
 # Download the Go module dependencies
 RUN go mod download
 
-COPY . .
+COPY cmd/ cmd/
+COPY internal/ internal/
 
-RUN GOOS=linux go build -v ./cmd/targon/targon.go
+RUN GOOS=linux go build -v -o validator ./cmd/validator
 
-FROM alpine:3.22.1 
+FROM alpine:3.22.1
 # TODO better way of doing this
 ENV VERSION=7.6.0
 WORKDIR /app
 RUN touch .env
 RUN apk add ca-certificates
-COPY --from=build /app/targon targon
-CMD ["/app/targon"]
+COPY --from=build /app/validator validator
+CMD ["/app/validator"]

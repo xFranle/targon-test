@@ -10,12 +10,11 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
 ENV PATH="/root/.cargo/bin:/app/.venv/bin:${PATH}"
 
 # dependency files first
-COPY requirements.txt .
+COPY weights-api/requirements.txt .
 
 RUN pip install -r requirements.txt
 
 # copy source packages
-COPY . .
+COPY weights-api/ .
 
 CMD ["python", "-u", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-

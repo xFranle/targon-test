@@ -6,10 +6,10 @@ BIN_DIR           := bin
         up-validator down-validator up-miner down-miner
 
 build-cli:
-	go build -o $(BIN_DIR)/sn4 ./cmd/cli
+	go build -o $(BIN_DIR)/sn4 ./cmd/sn4
 
 install-cli:
-	go build -o $(shell go env GOPATH)/bin/sn4 ./cmd/cli
+	go install ./cmd/sn4
 
 test:
 	go test ./...

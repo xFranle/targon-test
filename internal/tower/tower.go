@@ -10,7 +10,8 @@ import (
 	"net/http"
 	"time"
 
-	"targon/internal/nonce"
+	"github.com/manifold-inc/targon/internal/attest"
+	"github.com/manifold-inc/targon/internal/attest/nonce"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
@@ -36,6 +37,10 @@ type Auction struct {
 	TargetPrice    int `json:"target_price" bson:"target_price"`
 	MaxPrice       int `json:"max_price" bson:"max_price"`
 	MinClusterSize int `json:"min_cluster_size" bson:"min_cluster_size"`
+}
+
+type AttestBody struct {
+	Nonce string `json:"nonce"`
 }
 
 func NewTower(client *http.Client, url string, hotkey *signature.KeyringPair, log *zap.SugaredLogger) *Tower {
@@ -79,7 +84,7 @@ func (t *Tower) AuctionDetails() (*Auctions, error) {
 	return &aucDetails, nil
 }
 
-func GetAttestation(log *zap.SugaredLogger, nonce string, kp *signature.KeyringPair) (*AttestResponse, error) {
+func GetAttestation(log *zap.SugaredLogger, nonce string, kp *signature.KeyringPair) (*attest.AttestationResponse, error) {
 	tr := &http.Transport{
 		TLSHandshakeTimeout: 5 * time.Second,
 		MaxConnsPerHost:     1,
@@ -128,49 +133,11 @@ func GetAttestation(log *zap.SugaredLogger, nonce string, kp *signature.KeyringP
 		log.Debugw("Failed reading response", "error", err)
 		return nil, err
 	}
-	var attestRes AttestResponse
+	var attestRes attest.AttestationResponse
 	err = json.Unmarshal(resBody, &attestRes)
 	if err != nil {
 		log.Debugw("Failed unmarshaling response", "error", err)
 		return nil, err
 	}
 	return &attestRes, nil
-}
-
-type AttestResponse struct {
-	Quote    string    `json:"quote"`
-	UserData *UserData `json:"user_data"`
-}
-
-type UserData struct {
-	// Added in attester
-	GPUCards     *Cards        `json:"gpu_cards,omitempty"`
-	CPUCards     *Cards        `json:"cpu_cards,omitempty"`
-	NodeType     string        `json:"node_type"`
-	NVCCResponse *NVCCResponse `json:"attestation,omitempty"`
-	AuctionName  string        `json:"auction_name"`
-
-	// Added in handler
-	Nonce     string `json:"nonce"`
-	CVMID     string `json:"cvm_id"`
-	QuoteType string `json:"quote_type"`
-}
-
-type NVCCResponse struct {
-	GPURemote struct {
-		AttestationResult bool   `json:"attestation_result"`
-		Token             string `json:"token"`
-		Valid             bool   `json:"valid"`
-	} `json:"gpu_remote"`
-	SwitchRemote struct {
-		AttestationResult bool   `json:"attestation_result"`
-		Token             string `json:"token"`
-		Valid             bool   `json:"valid"`
-	} `json:"switch_remote"`
-}
-
-type Cards []string
-
-type AttestBody struct {
-	Nonce string `json:"nonce"`
 }

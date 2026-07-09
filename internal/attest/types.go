@@ -1,4 +1,13 @@
-package shared
+package attest
+
+import (
+	"encoding/json"
+	"errors"
+)
+
+type MinerNode struct {
+	IP string `json:"ip"`
+}
 
 type AttestationResponse struct {
 	Quote    string       `json:"quote"`
@@ -41,3 +50,35 @@ type NVCCResponse struct {
 }
 
 type Cards []string
+
+type GPUAttestationResponse struct {
+	Valid bool  `json:"valid"`
+	Error error `json:"error,omitempty"`
+}
+
+func (g *GPUAttestationResponse) UnmarshalJSON(data []byte) error {
+	var aux struct {
+		Valid bool   `json:"valid"`
+		Error string `json:"error,omitempty"`
+	}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	g.Valid = aux.Valid
+	if aux.Error != "" {
+		g.Error = errors.New(aux.Error)
+	}
+	return nil
+}
+
+type NVCCVerifyBody struct {
+	NVCCResponse  `json:"inline"`
+	ExpectedNonce string `json:"expected_nonce"`
+}
+
+type NVCCVerifyResponse struct {
+	GpuAttestationSuccess    bool `json:"gpu_attestation_success"`
+	SwitchAttestationSuccess bool `json:"switch_attestation_success"`
+}

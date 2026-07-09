@@ -1,4 +1,3 @@
-// Package cvm
 package cvm
 
 import (
@@ -13,7 +12,7 @@ import (
 	"syscall"
 	"time"
 
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/attest"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
@@ -79,7 +78,7 @@ func (a *Attester) AttestFromNode(
 	cvmIP string,
 	port int,
 	nonce string,
-) (*targon.AttestationResponse, error) {
+) (*attest.AttestationResponse, error) {
 	client := &http.Client{Transport: &http.Transport{
 		TLSHandshakeTimeout: 5 * time.Second * a.timeoutMult,
 		MaxConnsPerHost:     1,
@@ -139,7 +138,7 @@ func (a *Attester) AttestFromNode(
 	if err != nil {
 		return nil, utils.Wrap("failed reading response", err)
 	}
-	var attestRes targon.AttestationResponse
+	var attestRes attest.AttestationResponse
 	err = json.Unmarshal(resBody, &attestRes)
 	if err != nil {
 		return nil, utils.Wrap("failed unmarshaling response", err)
@@ -151,7 +150,7 @@ func (a *Attester) GetAttestFromNode(
 	minerHotkey string,
 	cvmIP string,
 	nonce string,
-) (*targon.AttestationResponse, error) {
+) (*attest.AttestationResponse, error) {
 	cvmIP = NormalizeHost(cvmIP)
 	var lastErr error
 	for _, p := range attestPorts {
@@ -168,11 +167,10 @@ func (a *Attester) GetAttestFromNode(
 }
 
 func (a *Attester) VerifyAttestation(
-	attestRes *targon.AttestationResponse,
+	attestRes *attest.AttestationResponse,
 	nonce string,
 	ip string,
-) (*targon.UserData, error) {
-	// Validate Attestation
+) (*attest.UserData, error) {
 	body, err := json.Marshal(map[string]any{
 		"attestation": attestRes,
 		"ip_address":  ip,
@@ -185,9 +183,14 @@ func (a *Attester) VerifyAttestation(
 		return nil, errors.New("invalid nonce")
 	}
 
+	verifyPath := "/api/v1/verify-attestation"
+	if attestRes.TPM != nil && attestRes.UserData.Version == 2 {
+		verifyPath = "/api/v2/verify-attestation"
+	}
+
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("%s/api/v1/verify-attestation", a.towerURL),
+		fmt.Sprintf("%s%s", a.towerURL, verifyPath),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {
@@ -218,7 +221,7 @@ func (a *Attester) VerifyAttestation(
 		return nil, utils.Wrap("bad status code from tower", errors.New(string(resBody)))
 	}
 
-	var attestResponse targon.GPUAttestationResponse
+	var attestResponse attest.GPUAttestationResponse
 	err = attestResponse.UnmarshalJSON(resBody)
 	if err != nil {
 		return nil, utils.Wrap("failed decoding json response from tower")
@@ -233,7 +236,7 @@ func (a *Attester) VerifyAttestation(
 }
 
 // GetNodes Gets a single miners cvm bids
-func (a *Attester) GetNodes(hotkey string, ip string) ([]*targon.MinerNode, error) {
+func (a *Attester) GetNodes(hotkey string, ip string) ([]*attest.MinerNode, error) {
 	tr := &http.Transport{
 		TLSHandshakeTimeout: 5 * time.Second * a.timeoutMult,
 		MaxConnsPerHost:     1,
@@ -278,18 +281,18 @@ func (a *Attester) GetNodes(hotkey string, ip string) ([]*targon.MinerNode, erro
 	}
 
 	// Backwards compat; remove later on
-	var nodesv2 []*targon.MinerNode
+	var nodesv2 []*attest.MinerNode
 	var nodesv1 []string
 	err = json.Unmarshal(body, &nodesv2)
 	if err != nil {
 		// reset this encase it got accidentally populated by the previous unmarshal
-		nodesv2 = []*targon.MinerNode{}
+		nodesv2 = []*attest.MinerNode{}
 		err = json.Unmarshal(body, &nodesv1)
 		if err != nil {
 			return nil, utils.Wrap("failed reading miner response", err)
 		}
 		for _, node := range nodesv1 {
-			nodesv2 = append(nodesv2, &targon.MinerNode{
+			nodesv2 = append(nodesv2, &attest.MinerNode{
 				IP: node,
 			})
 		}

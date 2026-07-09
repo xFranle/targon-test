@@ -30,17 +30,16 @@ type Dependencies struct {
 	Tower  *tower.Tower
 }
 type Env struct {
-	TowerURL             string
-	HotkeyPhrase         string
-	AttestRate           float64
-	ChainEndpoint        string
-	NvidiaAttestEndpoint string
-	Version              types.U64
-	Debug                bool
-	Netuid               int
-	DiscordURL           string
-	TimeoutMult          time.Duration
-	ValiIP               string
+	TowerURL      string
+	HotkeyPhrase  string
+	AttestRate    float64
+	ChainEndpoint string
+	Version       types.U64
+	Debug         bool
+	Netuid        int
+	DiscordURL    string
+	TimeoutMult   time.Duration
+	ValiIP        string
 }
 
 func GetEnv(key, fallback string) string {
@@ -84,11 +83,9 @@ func Init(opts ...any) *Dependencies {
 	DiscordURL := GetEnv("DISCORD_URL", "")
 	HotkeyPhrase := GetEnvOrPanic("HOTKEY_PHRASE", sugar)
 	ChainEndpoint := GetEnv("CHAIN_ENDPOINT", "wss://entrypoint-finney.opentensor.ai:443")
-	NvidiaAttestEndpoint := GetEnv("NVIDIA_ATTEST_ENDPOINT", "http://nvidia-attest")
 	Version := GetEnvOrPanic("VERSION", sugar)
 	ValiIP := GetEnvOrPanic("VALIDATOR_IP", sugar)
 	Debug := GetEnv("DEBUG", "0")
-	TowerURL := GetEnv("TOWER_URL", "https://tower.targon.com")
 	TimeoutMultStr := GetEnv("TIMEOUT_MULT", "1")
 	TimeoutMult, err := strconv.Atoi(TimeoutMultStr)
 	if err != nil {
@@ -181,16 +178,15 @@ func Init(opts ...any) *Dependencies {
 		Mongo:  mongoClient,
 		Tower:  t,
 		Env: Env{
-			TowerURL:             TowerURL,
-			Debug:                debug,
-			ChainEndpoint:        ChainEndpoint,
-			NvidiaAttestEndpoint: NvidiaAttestEndpoint,
-			Version:              *parsedVer,
-			Netuid:               netuid,
-			DiscordURL:           DiscordURL,
-			TimeoutMult:          time.Duration(TimeoutMult),
-			AttestRate:           AttestRate,
-			ValiIP:               ValiIP,
+			TowerURL:      TowerURL,
+			Debug:         debug,
+			ChainEndpoint: ChainEndpoint,
+			Version:       *parsedVer,
+			Netuid:        netuid,
+			DiscordURL:    DiscordURL,
+			TimeoutMult:   time.Duration(TimeoutMult),
+			AttestRate:    AttestRate,
+			ValiIP:        ValiIP,
 		},
 	}
 }

@@ -2,7 +2,6 @@ package callbacks
 
 import (
 	"fmt"
-	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -90,7 +89,7 @@ func sendIntervalSummary(c *validator.Core, h types.Header, uids, scores []uint1
 
 	burned := 0.0
 	for i, uid := range uids {
-		if slices.Contains(burnKeys, int(uid)) {
+		if _, ok := c.BurnDistribution[int(uid)]; ok {
 			burned += float64(scores[i]) / float64(setup.U16MAX)
 		}
 	}

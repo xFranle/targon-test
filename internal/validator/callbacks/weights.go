@@ -21,9 +21,6 @@ type WeightsAPIBody struct {
 	Version int      `json:"version"`
 }
 
-// final burn keys, randomized across 3 keys for WC combat
-var burnKeys = []int{28, 15, 243}
-
 func setWeights(c *validator.Core, uids []uint16, scores []uint16) {
 	defer func() {
 		resetState(c)

@@ -7,9 +7,9 @@ import (
 	"syscall"
 	"time"
 
-	"targon/internal/callbacks"
-	"targon/internal/setup"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/validator"
+	"github.com/manifold-inc/targon/internal/validator/callbacks"
+	"github.com/manifold-inc/targon/internal/validator/setup"
 
 	"github.com/subtrahend-labs/gobt/boilerplate"
 )
@@ -30,16 +30,16 @@ func main() {
 		}()
 	}
 
-	core := targon.CreateCore(deps)
-	validator := boilerplate.NewChainSubscriber()
+	core := validator.CreateCore(deps)
+	v := boilerplate.NewChainSubscriber()
 	deps.Log.Infof("Creating validator on netuid [%d]", deps.Env.Netuid)
 
-	callbacks.AddBlockCallbacks(validator, core)
+	callbacks.AddBlockCallbacks(v, core)
 
-	validator.SetOnSubscriptionError(func(e error) {
+	v.SetOnSubscriptionError(func(e error) {
 		deps.Log.Errorw("Subscription Error", "error", e)
 	})
-	err := targon.LoadMongoBackup(core)
+	err := validator.LoadMongoBackup(core)
 	if err != nil {
 		core.Deps.Log.Warn("Failed to load last checkpoint")
 	}
@@ -50,11 +50,11 @@ func main() {
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 		<-sigChan
-		validator.Stop()
+		v.Stop()
 	}()
 
 	for {
-		err := validator.Start(deps.Client)
+		err := v.Start(deps.Client)
 		if err != nil {
 			deps.Log.Errorw("Subscription Error", "error", err)
 			time.Sleep(5 * time.Second)
@@ -63,7 +63,7 @@ func main() {
 		break
 	}
 	core.Deps.Log.Info("Shutting down validator")
-	err = targon.SaveMongoBackup(core)
+	err = validator.SaveMongoBackup(core)
 	if err != nil {
 		core.Deps.Log.Errorw("Failed saving backup of state", "error", err)
 	}

@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"miner/internal/setup"
+	"github.com/manifold-inc/targon/internal/miner/setup"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"github.com/labstack/echo/v4"

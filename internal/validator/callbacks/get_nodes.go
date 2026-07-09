@@ -5,14 +5,14 @@ import (
 	"net"
 	"sync"
 
-	"targon/internal/cvm"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/attest/cvm"
+	"github.com/manifold-inc/targon/internal/validator"
 
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
 )
 
 // Gets all nodes and adds them to the core
-func getNodesAll(c *targon.Core) {
+func getNodesAll(c *validator.Core) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(c.Neurons))
 	mu := sync.Mutex{}

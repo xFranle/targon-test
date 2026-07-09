@@ -4,16 +4,17 @@ import (
 	"errors"
 	"sync"
 
-	"targon/internal/cvm"
-	"targon/internal/nonce"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/attest"
+	"github.com/manifold-inc/targon/internal/attest/cvm"
+	"github.com/manifold-inc/targon/internal/attest/nonce"
+	"github.com/manifold-inc/targon/internal/validator"
 
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
 )
 
 // Collects attestations across all miners and all nodes, skipping nodes
 // its already found
-func getPassingAttestations(c *targon.Core) {
+func getPassingAttestations(c *validator.Core) {
 	wg := sync.WaitGroup{}
 	mu := sync.Mutex{}
 	c.Deps.Log.Infof("Getting Attestations for %d miners", len(c.Neurons))
@@ -25,10 +26,10 @@ func getPassingAttestations(c *targon.Core) {
 		}
 		mu.Lock()
 		if c.VerifiedNodes[uid] == nil {
-			c.VerifiedNodes[uid] = map[string]*targon.UserData{}
+			c.VerifiedNodes[uid] = map[string]*attest.UserData{}
 		}
 		if c.VerifiedNodes[uid] == nil {
-			c.VerifiedNodes[uid] = map[string]*targon.UserData{}
+			c.VerifiedNodes[uid] = map[string]*attest.UserData{}
 		}
 		if c.MinerErrors[uid] == nil {
 			c.MinerErrors[uid] = make(map[string]string)
@@ -52,7 +53,7 @@ func getPassingAttestations(c *targon.Core) {
 				attestPayload, err := attester.GetAttestFromNode(utils.AccountIDToSS58(n.Hotkey), cvmIP, nonce)
 
 				// Verify attestation
-				var userData *targon.UserData
+				var userData *attest.UserData
 				if err == nil {
 					userData, err = attester.VerifyAttestation(
 						attestPayload,

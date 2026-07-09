@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"targon/internal/discord"
-	"targon/internal/setup"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/discord"
+	"github.com/manifold-inc/targon/internal/validator"
+	"github.com/manifold-inc/targon/internal/validator/setup"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 )
@@ -24,7 +24,7 @@ type minerStats struct {
 	incentive float64
 }
 
-func sendIntervalSummary(c *targon.Core, h types.Header, uids, scores []uint16) error {
+func sendIntervalSummary(c *validator.Core, h types.Header, uids, scores []uint16) error {
 	stats := make(map[int]*minerStats)
 	totalGPUs := 0
 	totalCPUs := 0

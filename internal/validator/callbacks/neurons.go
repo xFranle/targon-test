@@ -3,14 +3,14 @@ package callbacks
 import (
 	"fmt"
 
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/validator"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
 	"github.com/subtrahend-labs/gobt/runtime"
 )
 
-func getNeuronsCallback(c *targon.Core, h types.Header) {
+func getNeuronsCallback(c *validator.Core, h types.Header) {
 	c.Deps.Log.Info("Updating neurons")
 	neurons, err := runtime.GetNeurons(c.Deps.Client, uint16(c.Deps.Env.Netuid), &h.ParentHash)
 	if err != nil {
@@ -26,7 +26,7 @@ func getNeuronsCallback(c *targon.Core, h types.Header) {
 		}
 	}
 	c.HotkeyToUID = make(map[string]string)
-	c.ColdkeyToUID = make(map[string]targon.AccountInfo)
+	c.ColdkeyToUID = make(map[string]validator.AccountInfo)
 	for _, n := range neurons {
 		uid := fmt.Sprintf("%d", n.UID.Int64())
 		c.Neurons[uid] = n
@@ -35,7 +35,7 @@ func getNeuronsCallback(c *targon.Core, h types.Header) {
 		for _, i := range n.Stake {
 			totalStake += i.Amount.Int64()
 		}
-		c.ColdkeyToUID[utils.AccountIDToSS58(n.Coldkey)] = targon.AccountInfo{
+		c.ColdkeyToUID[utils.AccountIDToSS58(n.Coldkey)] = validator.AccountInfo{
 			UID:   uid,
 			Alpha: totalStake,
 		}

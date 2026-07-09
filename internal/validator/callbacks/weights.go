@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"targon/internal/setup"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/validator"
+	"github.com/manifold-inc/targon/internal/validator/setup"
 )
 
 type WeightsAPIBody struct {
@@ -24,7 +24,7 @@ type WeightsAPIBody struct {
 // final burn keys, randomized across 3 keys for WC combat
 var burnKeys = []int{28, 15, 243}
 
-func setWeights(c *targon.Core, uids []uint16, scores []uint16) {
+func setWeights(c *validator.Core, uids []uint16, scores []uint16) {
 	defer func() {
 		resetState(c)
 	}()
@@ -92,13 +92,13 @@ type SetWeightsRes struct {
 
 // getWeights returns
 // uid array, weights array, auction results, error
-func getWeights(c *targon.Core) ([]uint16, []uint16, map[string][]*targon.MinerBid, error) {
+func getWeights(c *validator.Core) ([]uint16, []uint16, map[string][]*validator.MinerBid, error) {
 	if c.EmissionPool == nil {
 		return nil, nil, nil, errors.New("emission pool is not set")
 	}
 
 	// auction => miner nodes
-	auction := map[string][]*targon.MinerBid{}
+	auction := map[string][]*validator.MinerBid{}
 
 	// For each uid, for each node, add any passing nodes to the auction map
 	// under the respective auction
@@ -129,7 +129,7 @@ func getWeights(c *targon.Core) ([]uint16, []uint16, map[string][]*targon.MinerB
 				cards = len(*c.VerifiedNodes[uid][n.IP].GPUCards)
 			}
 
-			auction[auctionName] = append(auction[auctionName], &targon.MinerBid{
+			auction[auctionName] = append(auction[auctionName], &validator.MinerBid{
 				IP:    n.IP,
 				UID:   uid,
 				Count: cards,

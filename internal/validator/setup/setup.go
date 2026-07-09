@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"targon/internal/discord"
-	"targon/internal/tower"
+	"github.com/manifold-inc/targon/internal/discord"
+	"github.com/manifold-inc/targon/internal/tower"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"

@@ -1,11 +1,11 @@
-package targon
+package validator
 
 import (
 	"context"
 	"errors"
 	"time"
 
-	"targon/internal/setup"
+	"github.com/manifold-inc/targon/internal/validator/setup"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"go.mongodb.org/mongo-driver/v2/bson"

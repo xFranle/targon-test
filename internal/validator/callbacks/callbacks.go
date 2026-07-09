@@ -8,14 +8,14 @@ import (
 	"net"
 	"time"
 
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/validator"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"github.com/subtrahend-labs/gobt/boilerplate"
 	"github.com/subtrahend-labs/gobt/storage"
 )
 
-func CheckAlreadyRegistered(core *targon.Core) error {
+func CheckAlreadyRegistered(core *validator.Core) error {
 	uid, found := core.HotkeyToUID[core.Deps.Hotkey.Address]
 	if !found {
 		return errors.New("not registered on sn")
@@ -33,7 +33,7 @@ func CheckAlreadyRegistered(core *targon.Core) error {
 	return fmt.Errorf("ip %s does not match chain ip %s", configIP, currentIP)
 }
 
-func AddBlockCallbacks(v *boilerplate.BaseChainSubscriber, c *targon.Core) {
+func AddBlockCallbacks(v *boilerplate.BaseChainSubscriber, c *validator.Core) {
 	// Wrapped for closure
 	getBlocksFrom := func(b types.Header) int {
 		tempo := 360
@@ -194,7 +194,7 @@ func AddBlockCallbacks(v *boilerplate.BaseChainSubscriber, c *targon.Core) {
 			c.Deps.Log.Warnw("Failed logging to discord", "error", err)
 		}
 		if c.Deps.Mongo != nil {
-			syncErr := targon.SyncMongo(c, uids, scores, h)
+			syncErr := validator.SyncMongo(c, uids, scores, h)
 			if syncErr != nil {
 				c.Deps.Log.Errorw("Failed syncing complete data to mongo", "error", syncErr)
 			}

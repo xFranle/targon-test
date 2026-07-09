@@ -1,16 +1,13 @@
-// Package targon
-package targon
+// Package validator holds the core state and lifecycle of the validator daemon.
+package validator
 
 import (
-	"targon/internal/setup"
-	"targon/internal/tower"
+	"github.com/manifold-inc/targon/internal/attest"
+	"github.com/manifold-inc/targon/internal/tower"
+	"github.com/manifold-inc/targon/internal/validator/setup"
 
 	"github.com/subtrahend-labs/gobt/runtime"
 )
-
-type MinerNode struct {
-	IP string `json:"ip"`
-}
 
 type AccountInfo struct {
 	UID   string `bson:"uid"`
@@ -25,13 +22,13 @@ type Core struct {
 	BurnDistribution map[int]int                   `bson:"burn_distribution"`
 
 	// uid -> nodes
-	MinerNodes map[string][]*MinerNode `bson:"miner_nodes"`
+	MinerNodes map[string][]*attest.MinerNode `bson:"miner_nodes"`
 
 	// uid -> ip/location -> error
 	MinerErrors map[string]map[string]string `bson:"miner_errors"`
 
 	// uid -> nodes -> gpus
-	VerifiedNodes map[string]map[string]*UserData `bson:"verified_nodes"`
+	VerifiedNodes map[string]map[string]*attest.UserData `bson:"verified_nodes"`
 
 	// node id -> seen
 	NodeIds map[string]bool `bson:"node_ids"`
@@ -48,8 +45,8 @@ func CreateCore(d *setup.Dependencies) *Core {
 	// TODO init maps
 	return &Core{
 		Deps:          d,
-		MinerNodes:    map[string][]*MinerNode{},
-		VerifiedNodes: map[string]map[string]*UserData{},
+		MinerNodes:    map[string][]*attest.MinerNode{},
+		VerifiedNodes: map[string]map[string]*attest.UserData{},
 		Neurons:       map[string]runtime.NeuronInfo{},
 		NodeIds:       map[string]bool{},
 		MinerErrors:   map[string]map[string]string{},

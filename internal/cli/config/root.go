@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"targon/cli/root"
+	"github.com/manifold-inc/targon/internal/cli/root"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

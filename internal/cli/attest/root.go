@@ -10,11 +10,11 @@ import (
 	"os"
 	"sync"
 
-	"targon/cli/root"
-	"targon/cli/shared"
-	"targon/internal/cvm"
-	"targon/internal/nonce"
-	"targon/internal/targon"
+	"github.com/manifold-inc/targon/internal/attest"
+	"github.com/manifold-inc/targon/internal/attest/cvm"
+	"github.com/manifold-inc/targon/internal/attest/nonce"
+	"github.com/manifold-inc/targon/internal/cli/prompt"
+	"github.com/manifold-inc/targon/internal/cli/root"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
@@ -136,7 +136,7 @@ var ipsCmd = &cobra.Command{
 		}
 
 		fileInfo, _ := os.Stdin.Stat()
-		var nodes []*targon.MinerNode
+		var nodes []*attest.MinerNode
 		if isPipe := (fileInfo.Mode() & os.ModeNamedPipe) != 0; isPipe {
 			nodes = GetNodesFromStdin(cmd)
 		}
@@ -178,13 +178,13 @@ var ipsCmd = &cobra.Command{
 	},
 }
 
-func GetNodesFromStdin(cmd *cobra.Command) []*targon.MinerNode {
+func GetNodesFromStdin(cmd *cobra.Command) []*attest.MinerNode {
 	inputReader := cmd.InOrStdin()
 	scanner := bufio.NewScanner(inputReader)
-	nodes := []*targon.MinerNode{}
+	nodes := []*attest.MinerNode{}
 	for scanner.Scan() {
 		line := scanner.Text()
-		nodes = append(nodes, &targon.MinerNode{IP: line})
+		nodes = append(nodes, &attest.MinerNode{IP: line})
 	}
 	return nodes
 }
@@ -204,7 +204,7 @@ func loadConfig() (*AttestConfig, error) {
 
 	for key, value := range configStrings {
 		if viper.GetString(key) == "" {
-			shared.PromptConfigString(key)
+			prompt.PromptConfigString(key)
 		}
 		*value = viper.GetString(key)
 	}

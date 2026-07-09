@@ -4,7 +4,7 @@ package get
 import (
 	"os"
 
-	"targon/cli/root"
+	"github.com/manifold-inc/targon/internal/cli/root"
 
 	"github.com/spf13/cobra"
 )

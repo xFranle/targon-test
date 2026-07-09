@@ -50,7 +50,7 @@ func initConfig() error {
 }
 
 var RootCmd = &cobra.Command{
-	Use:   "targon",
+	Use:   "sn4",
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"targon/cli/shared"
+	"github.com/manifold-inc/targon/internal/cli/prompt"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/spf13/cobra"
@@ -58,7 +58,7 @@ var initCmd = &cobra.Command{
 
 		hotkeyPhrase := viper.GetString("validator.hotkey_phrase")
 		if len(hotkeyPhrase) == 0 {
-			hotkeyPhrase = shared.PromptConfigString("validator.hotkey_phrase")
+			hotkeyPhrase = prompt.PromptConfigString("validator.hotkey_phrase")
 		}
 		kp, err := signature.KeyringPairFromSecret(hotkeyPhrase, 42)
 		if err != nil {

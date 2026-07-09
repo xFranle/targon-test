@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"targon/cli/shared"
+	"github.com/manifold-inc/targon/internal/cli/prompt"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
@@ -39,7 +39,7 @@ var errsCMD = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		hotkeyPhrase := viper.GetString("miner.hotkey_phrase")
 		if len(hotkeyPhrase) == 0 {
-			hotkeyPhrase = shared.PromptConfigString("miner.hotkey_phrase")
+			hotkeyPhrase = prompt.PromptConfigString("miner.hotkey_phrase")
 		}
 		kp, err := signature.KeyringPairFromSecret(hotkeyPhrase, 42)
 		if err != nil {

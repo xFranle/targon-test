@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"targon/cli/shared"
+	"github.com/manifold-inc/targon/internal/cli/prompt"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/manifold-inc/manifold-sdk/lib/utils"
@@ -82,7 +82,7 @@ func loadConfig() (*GetConfig, error) {
 
 	for key, value := range configStrings {
 		if viper.GetString(key) == "" {
-			shared.PromptConfigString(key)
+			prompt.PromptConfigString(key)
 		}
 		*value = viper.GetString(key)
 	}

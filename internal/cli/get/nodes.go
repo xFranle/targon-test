@@ -5,8 +5,8 @@ import (
 	"net"
 	"os"
 
-	"targon/cli/shared"
-	"targon/internal/cvm"
+	"github.com/manifold-inc/targon/internal/attest/cvm"
+	"github.com/manifold-inc/targon/internal/cli/prompt"
 
 	"github.com/centrifuge/go-substrate-rpc-client/v4/signature"
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
@@ -105,7 +105,7 @@ func loadConfig() (*GetConfig, error) {
 
 	for key, value := range configStrings {
 		if viper.GetString(key) == "" {
-			shared.PromptConfigString(key)
+			prompt.PromptConfigString(key)
 		}
 		*value = viper.GetString(key)
 	}

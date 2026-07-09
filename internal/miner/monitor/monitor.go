@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"miner/internal/setup"
+	"github.com/manifold-inc/targon/internal/miner/setup"
 )
 
 func MonitorNodes(deps *setup.Dependencies) {

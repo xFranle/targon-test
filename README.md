@@ -1,7 +1,7 @@
 # Targon: The Confidential Decentralized AI Cloud
 
 Targon is a next-generation AI infrastructure platform that leverages
-Confidential Compute (CC) and Protected pcie (PPCIE) technology to secure the
+Trusted Execution Environment and Confidential Compute to secure the
 entire stack. By providing a secure execution environment from hardware to
 application layers, Targon enables verifiable and trustworthy operations across
 the entire infrastructure in a decentralized fashion.
@@ -10,20 +10,17 @@ NOTICE: Using this software, you must agree to the Terms and Agreements provided
 in the terms and conditions document. By downloading and running this software,
 you implicitly agree to these terms and conditions.
 
-## Overview
-
-Targon provides a comprehensive secure AI infrastructure powered by CC and PPCIE
-technology:
-
 ## Docs
 
 For validators, see [validator docs](/docs/validator/validator.md)
 
 For miners, see [miner docs](/docs/miner/miner.md)
 
+For the sn4 CLI, see [cli docs](/docs/sn4/sn4.md)
+
 For mongo-wrapper service, see [mongo-wrapper docs](/docs/mongo-wrapper.md)
 
-______________________________________________________________________
+---
 
 ### Core Security Features
 
@@ -67,40 +64,32 @@ ______________________________________________________________________
 ## Contribution Guidelines
 
 1. **Proposal Requirements**
-
-   - Must be discussed on Discord and other community channels
-   - Must demonstrate clear technical consensus
-   - Must be approved by project maintainers
-
-1. **Implementation Process**
-
-   - Changes must be thoroughly tested
-   - Must include migration plans if needed
-   - Must consider backward compatibility
-   - Must document security implications
-
-1. **Making Changes**
-
-   - Follow the existing code style
-   - Write clear commit messages
-   - Include tests for new features
-   - Update documentation as needed
+  - Must be discussed on Discord and other community channels
+  - Must demonstrate clear technical consensus
+  - Must be approved by project maintainers
+2. **Implementation Process**
+  - Changes must be thoroughly tested
+  - Must include migration plans if needed
+  - Must consider backward compatibility
+  - Must document security implications
+3. **Making Changes**
+  - Follow the existing code style
+  - Write clear commit messages
+  - Include tests for new features
+  - Update documentation as needed
 
 ### Community Guidelines
 
 1. **Communication**
-
-   - Be respectful and professional
-   - Provide constructive feedback
-   - Help others when possible
-   - Follow the project's code of conduct
-
-1. **Collaboration**
-
-   - Respond to review comments promptly
-   - Be open to feedback and suggestions
-   - Help maintain project quality
-   - Share knowledge with the community
+  - Be respectful and professional
+  - Provide constructive feedback
+  - Help others when possible
+  - Follow the project's code of conduct
+2. **Collaboration**
+  - Respond to review comments promptly
+  - Be open to feedback and suggestions
+  - Help maintain project quality
+  - Share knowledge with the community
 
 Remember: The goal is to improve Targon and Bittensor as a whole. We welcome all
 contributions that align with this mission and follow our guidelines.

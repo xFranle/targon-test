@@ -56,11 +56,14 @@ func sendIntervalSummary(c *validator.Core, h types.Header, uids, scores []uint1
 				stats[uid].gpuCount++
 				stats[uid].gpuTypes[gpuLower]++
 			}
-			for _, cpu := range *node.CPUCards {
-				cpuLower := strings.ToLower(cpu)
-				totalCPUs++
-				stats[uid].cpuCount++
-				stats[uid].cpuTypes[cpuLower]++
+			// Only count CPUs for CPU-only nodes;
+			if len(*node.GPUCards) == 0 {
+				for _, cpu := range *node.CPUCards {
+					cpuLower := strings.ToLower(cpu)
+					totalCPUs++
+					stats[uid].cpuCount++
+					stats[uid].cpuTypes[cpuLower]++
+				}
 			}
 		}
 	}

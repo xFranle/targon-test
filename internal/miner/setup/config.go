@@ -19,8 +19,7 @@ type Config struct {
 	MinStake      int        `json:"min_stake"`
 }
 type NodeItem struct {
-	IP    string `json:"ip"`
-	Price int    `json:"price"`
+	IP string `json:"ip"`
 }
 
 func LoadConfig() *Config {

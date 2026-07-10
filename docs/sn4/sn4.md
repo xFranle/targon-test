@@ -1,121 +1,142 @@
-## How to Install
+# sn4 CLI
 
-Run the command `just install-cli`:
+## Installation
 
-```bash
-just install-cli
-```
-
-This will install the CLI binary to your Go bin directory (typically `~/go/bin/`). Make sure this directory is in your PATH.
-
-## How to Use
-
-The CLI tool is accessed via the `targon-cli` command. On first run, it will prompt you to create a configuration file with your hotkey phrase.
+Build and install the binary with:
 
 ```bash
-targon-cli [command] [flags]
+make install-cli
 ```
+
+This installs the binary to `/usr/local/bin/sn4`. Depending on your permissions, you may need to run `sudo make install-cli`.
+
+To install to a different location, override `PREFIX`:
+
+```bash
+make install-cli PREFIX=$HOME/.local   # installs to ~/.local/bin/sn4
+```
+
+Make sure the target `bin` directory is in your `PATH`.
+
+To uninstall, run `make uninstall-cli` (using the same `PREFIX` if you overrode it).
 
 ## Quick Start
 
 1. **Install the CLI:**
+  ```bash
+   make install-cli
+  ```
+2. **Run first-time setup:**
+  ```bash
+   sn4
+  ```
+   On first run, the CLI prompts for your hotkey phrase and creates a configuration file at `~/.config/.targon.json`.
 
-   ```bash
-   just install-cli
-   ```
+## Usage
 
-2. **First-time setup (creates config file):**
-
-   ```bash
-   targon-cli
-   # This will prompt for hotkey phrase and create ~/.config/.targon.json
-   ```
+```bash
+sn4 [command] [flags]
+```
 
 ## Commands
 
-### `targon-cli attest`
+### `sn4 attest`
 
-Command for validators instead of miners. Manually attest a miner or IP address for GPU verification.
+Validator-only command. Manually attest a miner or IP address for attestation.
 
 **Usage:**
 
 ```bash
-targon-cli attest [flags]
+sn4 attest [flags]
 ```
 
 **Flags:**
 
-- `--ip string` - Specific IP address for off-chain testing
-- `--uid int` - Specific UID to grab GPU info for
+
+| Flag    | Type   | Description                               |
+| ------- | ------ | ----------------------------------------- |
+| `--uid` | int    | UID of the miner to attest                |
+| `--ip`  | string | Specific IP address for off-chain testing |
+
 
 **Examples:**
 
 ```bash
 # Attest a specific UID
-targon-cli attest --uid 123
+sn4 attest --uid 123
 
 # Attest a specific IP address
-targon-cli attest --ip http://192.168.1.100:8080
-
+sn4 attest --ip 192.168.1.100
 ```
 
-### `targon-cli config`
+### `sn4 config`
 
 Update configuration settings.
 
 **Usage:**
 
 ```bash
-targon-cli config [flags]
+sn4 config [flags]
 ```
 
 **Flags:**
 
-- `--miner.hotkey-phrase string` - Miner Hotkey phrase to update to
-- `--validator.hotkey-phrase string` - Validator Hotkey phrase to update to
+
+| Flag                        | Type   | Description                 |
+| --------------------------- | ------ | --------------------------- |
+| `--miner.hotkey-phrase`     | string | New miner hotkey phrase     |
+| `--validator.hotkey-phrase` | string | New validator hotkey phrase |
+
 
 **Examples:**
 
 ```bash
-# Update hotkey phrase
-targon-cli config --hotkey-phrase "your-hotkey-phrase-here"
+# Update the miner hotkey phrase
+sn4 config --miner.hotkey-phrase "your hotkey phrase here"
+
+# Update the validator hotkey phrase
+sn4 config --validator.hotkey-phrase "your hotkey phrase here"
 ```
 
-### `targon-cli get`
+### `sn4 get`
 
 Fetch data from MongoDB or the blockchain and display it in various formats.
 
 **Usage:**
 
 ```bash
-targon-cli get [command]
+sn4 get [command]
 ```
 
 **Subcommands:**
 
-#### `targon-cli get errors`
+#### `sn4 get errors`
 
 Get attestation errors for a specific UID.
 
 **Usage:**
 
 ```bash
-targon-cli get errors [flags]
+sn4 get errors [flags]
 ```
 
 **Flags:**
 
-- `--uid int` - Specific UID to grab GPU info for
 
-**Examples:**
+| Flag    | Type | Description                         |
+| ------- | ---- | ----------------------------------- |
+| `--uid` | int  | UID to fetch attestation errors for |
+
+
+**Example:**
 
 ```bash
-targon-cli get errors --uid 123
+sn4 get errors --uid 123
 ```
 
 ## Configuration
 
-The CLI tool uses a JSON configuration file located at `~/.config/.targon.json`. This file stores your hotkey phrase and other settings.
+The CLI stores its settings in a JSON file at `~/.config/.targon.json`, created during first-time setup. It holds your hotkey phrase and other settings.
 
 **Configuration file structure:**
 
@@ -124,3 +145,4 @@ The CLI tool uses a JSON configuration file located at `~/.config/.targon.json`.
   "HOTKEY_PHRASE": "your-hotkey-phrase-here"
 }
 ```
+

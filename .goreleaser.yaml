@@ -1,0 +1,24 @@
+version: 2
+
+builds:
+  - id: sn4
+    main: ./cmd/sn4
+    binary: sn4
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+nfpms:
+  - package_name: sn4
+    formats:
+      - deb
+    maintainer: Manifold Labs <devs@manifold.inc>
+    description: Targon sn4 subnet CLI
+    homepage: https://github.com/manifold-inc/targon
+    license: MIT
+    section: utils
+    bindir: /usr/bin

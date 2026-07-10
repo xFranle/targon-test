@@ -91,27 +91,12 @@ func sendIntervalSummary(c *validator.Core, h types.Header, uids, scores []uint1
 	})
 
 	burned := 0.0
-	burnedByUID := map[int]float64{}
 	for i, uid := range uids {
 		if _, ok := c.BurnDistribution[int(uid)]; ok {
-			pct := float64(scores[i]) / float64(setup.U16MAX)
-			burned += pct
-			burnedByUID[int(uid)] += pct
+			burned += float64(scores[i]) / float64(setup.U16MAX)
 		}
 	}
-	burnUids := make([]int, 0, len(burnedByUID))
-	for uid := range burnedByUID {
-		burnUids = append(burnUids, uid)
-	}
-	sort.Ints(burnUids)
-	burnParts := make([]string, 0, len(burnUids))
-	for _, uid := range burnUids {
-		burnParts = append(burnParts, fmt.Sprintf("U%d=%.2f%%", uid, burnedByUID[uid]*100))
-	}
 	burnedLine := fmt.Sprintf("%.2f%%", burned*100)
-	if len(burnParts) > 0 {
-		burnedLine += " → " + strings.Join(burnParts, " • ")
-	}
 	minerPayout := 0.0
 	for _, bids := range c.AuctionResults {
 		for _, bid := range bids {

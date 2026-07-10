@@ -25,3 +25,4 @@ config.json
 
 traefik.https.toml
 bin/
+dist/*

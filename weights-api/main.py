@@ -69,12 +69,13 @@ async def post_set_weights(req: WeightRequest):
                 version_key=req.version,
                 wait_for_finalization=True,
                 wait_for_inclusion=True,
+                mev_protection=False,
                 period=64,
-                max_retries=1,
+                max_attempts=1,
                 raise_error=True,
             )
         logger.info(f"weights set: {res}")
-        return {"success": res[0], "msg": res[1]}
+        return {"success": res.success, "msg": res.message}
     except Exception as e:
         logger.error(f"Error: {str(e)}: {traceback.format_exc()}")
         # Only way to actually reconnect subtensor easily is to blow it up

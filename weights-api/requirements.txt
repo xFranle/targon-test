@@ -1,4 +1,4 @@
-bittensor==10.0.0rc1
+bittensor==10.5.0
 fastapi==0.110.1
 uvicorn==0.27.1
 pydantic==2.10.5
